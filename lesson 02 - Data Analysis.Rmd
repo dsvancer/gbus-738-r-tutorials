@@ -1,0 +1,1015 @@
+---
+title: "Data Analysis with the Tidyverse"
+author: "David Svancer"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      comment = "")
+```
+
+
+
+In this tutorial, we will learn about `R` functions and data analysis with the `tidyverse` package.
+
+
+# Functions
+In this section will learn about common built-in functions that are useful for obtaining summary statistics, ranking data, and data analysis. We will also learn how to write our own custom functions in `R`.
+
+
+## Built-in Functions
+
+### Percentiles
+
+The functions below are useful for studying the distribution of numeric values within a data set. All of these functions take a *numeric vector* as their input.
+
+- `min()`
+    - Returns the minimum value
+- `max()`
+    - Returns the maximum value
+- `range()`
+    - Returns a vector of length 2 with the range of observed values (minimum and maximum values) 
+- `median()`
+    - Returns the median value (50th percentile)
+- `fivenum()`
+    - Returns a vector of length 5 with the minimum, 25th percentile, median, 75th percentile, maximum values 
+- `quantile()`
+    - Returns the specified percentile(s) of a set of numeric values
+
+
+
+### Examples
+
+Obtaining the range of values present in a numeric vector.
+
+```{r}
+data_vector <- c(3, 9, 11.2, 14, 28.7, 30, 15, 21, 5.7, 9.1, 24.6)
+
+# minimum value in data_vector
+min(data_vector)
+```
+
+```{r}
+# maximum value
+max(data_vector)
+```
+
+```{r}
+# range of data values
+range(data_vector)
+```
+
+
+
+The `median()` and `quantile()` functions are used for obtaining specific percentiles from a distribution of numbers. 
+
+A percentile of a set of numbers is a value below which a given percentage of the total values fall at or below. For example, the 50th percentile (also called the median) represents the center of a set of numeric data. This means that 50% of all the values are less than or equal to the 50th percentile.
+
+The `quantile()` function requires two inputs. The first is a numeric vector of data values and the second is a vector with values ranging from 0 to 1, representing the percentile(s) to calculate.
+
+
+```{r}
+# median
+median(data_vector)
+```
+
+```{r}
+# 30th percentile
+quantile(data_vector, 0.3)
+```
+
+```{r}
+# 30th, 60th, and 90th percentiles
+quantile(data_vector, c(0.3, 0.6, 0.9))
+
+```
+
+
+
+The `fivenum()` function calculates the five number summary (min, 25th, median, 75th, max) of a numeric vector.
+
+```{r}
+fivenum(data_vector)
+```
+
+
+
+### Mean and Standard Deviation
+The `mean()` and `sd()` functions are used to calculate the mean and standard deviation of a set of data values.
+
+```{r}
+# mean value
+mean(data_vector)
+```
+
+```{r}
+# standard deviation
+sd(data_vector)
+```
+
+
+
+### Adding Elements of a Numeric Vector
+The `sum()` and `cumsum()` functions are used for summing the numbers within a vector. The `sum()` function simply returns the sum of all numbers within a vector. 
+
+The `cumsum()` functions calculates a cumulative sum for every position within a vector. This function always returns a vector of the same length as the input.
+
+```{r}
+# sum of all values
+sum(data_vector)
+```
+
+```{r}
+# cumulative sum
+cumsum(data_vector)
+```
+
+
+
+### Functions Useful for Ranking Data
+
+The `abs()` and `rank()` functions are useful for ranking data values. The `abs()` function returns the absolute values of a vector.
+
+```{r}
+negative_data <- c(-2, 4.5, -6, 10, 12)
+```
+
+```{r}
+# returns the absolute value of all elements
+abs(negative_data)
+```
+
+
+The `rank()` function returns the ranks of a set of data values from smallest to largest. The smallest value is given a rank of 1.
+
+```{r}
+data_vector
+```
+
+```{r}
+rank(data_vector)
+```
+
+
+To obtain ranks from largest to smallest, where rank 1 represents the largest value, just take the rank of the negative of a numeric vector. In the example below, the value 30 is given a rank of 1.
+
+```{r}
+data_vector
+```
+
+```{r}
+rank(-data_vector)
+```
+
+
+
+## Writing Functions in R
+
+There are many cases when we will have to write our own functions to achieve tasks in an analytics project. `R` functions can be defined to take any amount of inputs (usually called arguments) but only return one object. 
+
+The basic syntax of creating a function with arguments x and y is as follows:
+
+```{r, eval = FALSE}
+
+my_function <- function(x, y) {
+               R Code here 
+}
+
+```
+
+Let's write a simple function that takes a numeric vector as input and returns a vector of scaled values. For each value in our original vector, we will subtract the mean and divide by the standard deviation. I will show two equivalent ways of writing this function and discuss the difference.
+
+Note that the input value is named `x`. This is complete arbitrary. The input value could also have been named `input` as long as the same name is used within the code of the function.
+
+```{r}
+
+z_score_1 <- function(x) {
+              return((x - mean(x))/sd(x))
+}
+
+```
+
+
+```{r}
+# Let's test our function
+age_vector <- c(18, 24, 21, 37, 51, 34, 41)
+```
+
+```{r}
+z_score_1(age_vector)
+
+```
+
+
+
+By default, an `R` function returns the results of the **last** operation that it performed. The code below is an equivalent way of writing the same function. In this case we do not need to use `return` to give us the result.
+
+```{r}
+# Equivalent
+z_score_2 <- function(x) {
+              (x - mean(x))/sd(x)
+}
+
+```
+
+
+```{r}
+# Check results
+z_score_2(age_vector)
+
+```
+
+The `return()` call is useful when you need to return a **list of results** from a function. The function below creates three objects, `mean_x`, `sd_x`, and `scaled_data`. To obtain all of these results, we must use `return` and build a list that contains all of the objects.
+
+```{r}
+# return a list
+z_score_3 <- function(x) {
+                mean_x <- mean(x) 
+                sd_x <- sd(x) 
+                scaled_data <- (x - mean_x)/sd_x
+                
+                return(list(mean_value = mean_x,
+                            sd_value = sd_x,
+                            scaled_vector = scaled_data)) 
+}
+
+```
+
+
+```{r}
+
+detailed_results <- z_score_3(age_vector)
+
+# View the results
+detailed_results
+
+```
+
+
+# Introduction to Data Analysis
+
+This section will cover the basics of data manipulation using the `tidyverse` package. Before we can use the package, we must load it into our environment with the following code `library(tidyverse)`. This will import all of the functions available in the `tidyverse` package into our environment.The `tidyverse` is a collection of 8 packages that are designed specifically for data science tasks.
+
+In this course, I have installed all required packages into our RStudio Cloud environment. If you are ever working with RStudio on your desktop, you must install packages before they can be used. This is done with the following code `install.packages('tidyverse')`.
+
+To get more details about the `tidyverse` package see the [tidyverse documentation](https://tidyverse.org){target="_blank"}
+
+We will also load the `skimr` package which is used for exploring the structure of a data frame.
+
+```{r message = TRUE}
+# This will load all 8 of the tidyverse packages
+library(tidyverse)
+library(skimr)
+```
+
+
+The code below will import a data set from our course website. The data consists of 1,470 employee records for a U.S. based product company. The rows in this data frame represent the attributes of an employee at this company across the variables listed in the table below.
+
+| Variable            | Definition                                                           |
+|---------------------|----------------------------------------------------------------------|
+| left_company        | Did the employee leave the company? (Yes/No)                         |
+| department          | Department within the company                                        |
+| job_level           | Job Level (Associate - Vice President)                               |
+| salary              | Employee yearly salary (US Dollars)                                  |
+| weekly_hours        | Self-reported average weekly hours spent on the job (company survey) |
+| business_travel     | Level of required business travel                                    | 
+| yrs_at_company      | Tenure at the company (years)                                        | 
+| yrs_since_promotion | Years since last promotion                                           |
+| previous_companies  | Number of previous companies for which the employee has worked       | 
+| job_satisfaction    | Self-reported job satisfaction (company survey)                      | 
+| performance_rating  | Most recent annual performance rating                                | 
+| marital_status      | Marital status (Single, Married, or Divorced)                        | 
+| miles_from_home     | Distance from employee address to office location                    |
+
+
+
+This data is a special type of data frame known as a `tibble`. All data frames in the `tidyverse` are usually stored in this format. It has special properties which include better printing features and labels for column data types.
+
+```{r}
+employee_data <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/employee_data.rds'))
+
+# View data
+employee_data
+```
+
+
+
+## Exploring Data Frames with `skimr`
+
+The first step in a data analysis project is to explore your data source. This includes summarizing the values within each column, checking for missing data, checking the data types of each column, and verifying the number of rows and columns. 
+
+The `skim()` function can be used to accomplish all of this. It takes your data frame as an argument. In the output below, we first get the number of rows and columns along with the data types present in our data.
+
+The results are then grouped by the type of variables in our data. 
+
+First we get a summary of our factor variables, including the number of missing observations, whether our factor levels are ordered, the count of unique levels, and an abbreviated list of the most frequent factor levels.
+
+Then we get a summary of our numeric variables which include the number of missing observations, the mean and standard deviation, a five number summary, and a plot of the distribution of values.
+
+```{r}
+# View data frame properties and summary statistics
+skim(employee_data)
+```
+
+
+It is also possible to select a subset of variables to explore. Just pass a sequence of unquoted variable names into the `skim()` function.
+
+The `skimr` package has many more features for exploring data. Once we cover the fundamentals of `dplyr` in the next sections, I encourage interested students to explore the skmir documentation.
+
+```{r}
+# View data frame properties and summary statistics
+skim(employee_data, left_company, department, salary, weekly_hours)
+```
+
+
+## Data Manipulation with `dplyr`
+
+
+In this section we will cover data manipulation with the `dplyr` package. This is one of the core `tidyverse` packages used for exploring data frames.
+
+Chapter 5 of R for Data Science, covers the basics of manipulating data frames in `R`. In this tutorial, I would like to provide additional examples of the main functions of `dplyr`, including `filter()`, `select()`, `arrange()`, `summarise()`, and `mutate()`. 
+
+The first argument to all of these functions is a data frame, followed by additional arguments that perform various manipulations on the data. The output from all of these functions will also be a special type of data frame known as a `tibble`.
+
+
+### `filter()`
+
+The `filter()` function is used for subsetting rows of a data frame. It is much more intuitive than subsetting with the base `R` functions `[ ]` and `[[ ]]`. 
+
+The first argument to `filter()` is a data frame, followed by one or more logical conditions on the variables within the data frame. **Logical conditions separated by a comma are treated as an AND (&) operation**. The advantage of `dplyr`, is that you can pass variable names of a data frame in raw, unquoted format to many functions. The `filter()` function returns a data frame that has been subsetted by the logical conditions within its arguments.
+
+```{r}
+# employees that left the company
+filter(employee_data, left_company == 'Yes') 
+
+```
+
+
+```{r}
+# View employees that left from the Sales department
+filter(employee_data, left_company == 'Yes', department == 'Sales') 
+
+```
+
+
+
+To filter a data frame using an OR condition, we must use the `|` operator.
+
+```{r}
+# employees from Sales or Marketing department
+filter(employee_data, department == 'Sales' | department == 'Marketing')
+
+```
+
+
+
+Another way to execute OR statements is by using the `%in%` function. This function is used to check whether a column's variable values match at least one element within a vector. In many cases, it can save lots of typing. The code below will produce the same result as the previous command
+
+```{r}
+# employees from Sales or Marketing department
+filter(employee_data, department %in% c('Sales', 'Marketing'))
+
+```
+
+
+
+What if we are interested in employees from Sales or Marketing that make over $80,000? We can just add another condition to the previous code. Remember that conditions separated by a comma represent an AND operation. So in the code below, we are passing the following condition: employees with `salary` > 80000 **AND** (`department` is Sales **OR** `department` is Marketing)
+
+
+```{r}
+# employees from Sales or Marketing department
+filter(employee_data, salary > 80000, department %in% c('Sales', 'Marketing'))
+
+```
+
+
+
+### `select()`
+
+The `select()` function allows you to select a subset of columns from a data frame. There are multiple ways to enter the selection condition and many helper functions, such as `starts_with()`, `ends_with()`, and `contains()`.
+
+We can select columns by used unquoted column names.
+```{r}
+# Select the first three columns
+select(employee_data, left_company, department, job_level)
+
+```
+
+
+We can also select columns by using their numeric positions
+```{r}
+# Select the first three columns with a numeric vector
+select(employee_data, c(1, 2, 3))
+
+```
+
+
+We can also pass a sequence of numeric positions separated by a comma.
+```{r}
+# Select the first three columns with raw numbers
+select(employee_data, 1, 2, 3)
+
+```
+
+
+Adding a `-` in front of numeric positions or variable names excludes those variables and returns all others
+```{r}
+# Select all columns except department and job_level
+select(employee_data, -department, -job_level)
+
+```
+
+
+```{r}
+# Exclude the first 5 columns
+select(employee_data, -1, -2, -3, -4, -5)
+
+# Many times its easier to use a sequence
+select(employee_data, -(1:5))
+```
+
+
+There are many helper functions available with the `select()` function. Below are two examples. The first selects columns that contain the word "job". The second selects columns that start with the letter "y"
+
+```{r}
+# Select all variables that contain the word Rest
+select(employee_data, contains('job'))
+
+```
+
+
+```{r}
+# Select all variables that start with "y" (or "Y")
+select(employee_data, starts_with("y"))
+
+```
+
+
+
+### `arrange()`
+
+The `arrange()` function allows you to sort a data frame by specific columns. The default sorting order is ascending.
+
+```{r}
+# Sort by left_company and salary
+arrange(employee_data, left_company, salary)
+
+```
+
+
+
+To sort a column in descending order, wrap it in the `desc()` function.
+
+```{r}
+# Sort by left company (descending) and salary (ascending)
+arrange(employee_data, desc(left_company), salary)
+
+```
+
+
+### `summarise()`
+
+The `summarise()` function allows you to create numerical summaries, such as averages, from the columns of a data frame. The `summarise()` function is an aggregation function, meaning that it takes input with multiple values and returns a **single value**. With a sample average, for example, we take a numeric vector with *n* numbers and summarize it with a single value, the average.
+
+The `summarise()` function takes a data frame as the first argument followed by a sequence of functions to execute on the columns of the data frame.
+
+Remember that `dplyr` functions will always return a data frame of results, even the results are a single number or row.
+
+```{r}
+# Let's get the average salary
+summarise(employee_data, average_salary = mean(salary))
+
+```
+
+
+```{r}
+# We can also create multiple summaries at once
+summarise(employee_data, salary_min = min(salary),
+                         salary_25th = quantile(salary, 0.25),
+                         salary_50th = median(salary),
+                         salary_75th = quantile(salary, 0.75),
+                         salary_max =  max(salary))
+
+```
+
+
+### `mutate()`
+
+The `mutate()` function allows you to create new variables in your data. The `mutate()` function is a window function. Window functions take input with *n* values and always return a result with *n* values. Like `summarise()`, `mutate()` takes a data frame as the first argument followed by a sequence of functions to execute on the columns of the data frame.
+
+Let's create a new variable `salary_scaled` that transforms the `salary` values by subtracting the mean and dividing by the standard deviation. In the code below, I save this new data frame as `employee_data_scaled`.
+
+```{r}
+# Create salary_scaled variable
+employee_data_scaled <-  mutate(employee_data, 
+                                salary_scaled = (salary - mean(salary))/sd(salary))
+```
+
+
+```{r}
+# Let's see the result
+select(employee_data_scaled, salary, salary_scaled)
+
+```
+
+
+## Combining Steps With The `%>%` Operator
+
+One of the most useful tools in the `tidyverse` is the pipe operator, `%>%` . This operator allows users to combine multiple data manipulation tasks in one line of code. 
+
+The pipe operator tells `R` to take the object on the left and pass it to the right as the **first** argument to the next function. A keyboard shortcut for the pipe operator is `Ctrl` + `Shift` + `m`.
+
+Let's go through a simple example to demonstrate the ` %>%` operator. Suppose I have a vector of numeric values and I need to do the following:
+
+- Calculate a vector with the cumulative sums using the `cumsum()` function
+- Calculate the median of this new vector with the `median()` function
+
+The code below shows how this is done without the pipe operator. Most people new to programming find the code a bit difficult to read because the operations go from right to left. 
+
+`cumsum(numeric_data)` is evaluated first, then passed to the `median()` function on the left.
+
+If we had an operation that required 3 or more steps, writing code in this way would quickly get confusing to understand and explain.
+
+```{r}
+# Data values
+numeric_data <- c(2, 5, 1, 7, 9, 10)
+```
+
+```{r}
+# Cumulative sum
+cumsum(numeric_data)
+```
+
+```{r}
+# Median of the cumulative sum
+max(median(cumsum(numeric_data)))
+
+```
+
+
+The `%>%` operator can be used to write cleaner code that moves from right to left in a `do this - then that` fashion. In the code below, we first create the cumulative sum vector with `cumsum()` and then pass it to the first argument of the `median()` function. Most people find this style of coding much easier to understand.
+
+```{r}
+cumsum(numeric_data) %>% median()
+```
+
+
+### Using `%>%` with `dplyr`
+
+The pipe operator makes it easy to create data analysis workflows with `dplyr` functions. When splitting steps across multiple lines, make sure that each line **ends with %>%** to prevent errors.
+
+Let's use `%>%` to create the following data analysis:
+
+- Start with our data, `employee_data`
+- Filter the data to select employees who left the company
+- Calculate their average salary
+
+The code below demonstrates how to achieve this with one expression using the `%>%` operator. 
+
+Notice that we do not have to pass `employee_data` into the first argument of `filter()` since we have piped it in with the first `%>%`. The `filter()` function then produces a new data frame that only contains rows that have `left_company` values of "Yes". This is then passed to the first argument of `summarise()` by the second `%>%`.
+
+```{r}
+employee_data %>% 
+  filter(left_company == 'Yes') %>% 
+  summarise(average_salary = mean(salary))
+```
+
+
+For comparison, the code below executes the same workflow without the `%>%` operator. In this case, we must save our filtered data frame and pass it into `summarise()`.
+
+```{r}
+employees_left <- filter(employee_data, left_company == 'Yes')
+```
+
+```{r}
+summarise(employees_left, average_salary = mean(salary))
+```
+
+
+
+# Advanced Data Manipulation
+
+In this section, we will cover more advanced techniques for data manipulation with `dplyr`.
+
+## Split-Apply-Combine
+A common data analysis technique, known as `split-apply-combine`, involves creating statistical summaries **by groups** within a data frame.
+
+Using the `split-apply-combine` technique with `dplyr` usually involves taking a data frame, forming subsets with the `group_by()` function, applying a summary function to to the groups, and collecting the results into a single data frame.
+
+### group_by()
+
+The `group_by()` function allows you to perform tasks by groups in your data. A typical application of the `group_by()` function is when addressing questions such as *What's the average salary of employees by department*?
+
+The `group_by()` will separate a data frame into distinct groups using the variable that is supplied as the argument. Any `dplyr` functions that follow afterward are applied to the groups within the grouped data frame. 
+
+Below is an example of how we would answer the question from above.
+
+```{r}
+employee_data %>% 
+  group_by(department) %>% 
+  summarise(average_salary = mean(salary))
+
+```
+
+
+## Counting rows with `n()` and `count()`
+
+The `group_by()` function is also used for obtaining counts of factor or character variable values. The `n()` function returns the number of rows in a group.
+
+
+```{r}
+# The n() function in dplyr returns the number of rows per group
+employee_data %>% group_by(left_company) %>% 
+                  summarise(number_employees = n())
+
+```
+
+
+This type of summary is so common, that `dplyr` provides a function named `count()` to provide counts by levels of single or multiple variable combinations. This function creates a column named `n` with the counts. The `count()` function is best used with factor or character columns that do not have too many unique values.
+
+
+```{r}
+# Count the occurrence of each unique value in department
+employee_data %>% count(department)
+```
+
+
+```{r}
+# Counts can be sorted
+employee_data %>% count(department, sort = TRUE)
+```
+
+
+```{r}
+# Count variable can be renamed
+employee_data %>% count(department, sort = TRUE, name = 'number_of_employees')
+
+```
+
+
+
+The `count` function also takes multiple variables as arguments. This will count all of the combinations of variable values that are present in the data.
+
+```{r}
+# The count() function also takes multiple arguments
+employee_data %>% count(left_company, department, name = 'number_of_employees')
+
+```
+
+
+Keep in mind that all `dplyr` functions return a data frame so we can easily use other `dplyr` functions on the results on `count()`.
+
+```{r}
+# Arrange the output by department and left_company
+employee_data %>% count(left_company, department, name = 'number_of_employees') %>% 
+  arrange(department, left_company)
+```
+
+
+One more example. How many employees are there by job satisfaction? What are their average miles from the office by each category?
+
+
+```{r}
+employee_data %>% group_by(job_satisfaction) %>% 
+                  summarise(number_of_employees = n(),
+                            avg_miles = mean(miles_from_home))
+```
+
+
+Can you figure out why the code below doesn't work? 
+
+**Hint**: highlight and execute `employee_data %>% count(job_satisfaction, name = 'number_of_employees')`. What does this give you? 
+
+This is what is being passed to `summarise()`. Why doesn't `summarise()` know how to calculate the mean of the `miles_from_home` variable?
+
+```{r}
+employee_data %>% count(job_satisfaction, name = 'number_of_employees') %>% 
+                  summarise(avg_miles = mean(miles_from_home))
+```
+
+
+### A Warning on Working With `group_by()`
+
+When using `group_by()` it's important to know that all `summarise()` and `mutate()` functions are `applied by group`. If you need to apply functions to all rows of a data frame and not by groups, then use the `ungroup()` function to un-group the input data frame.  
+
+Let's say that we want to create a data frame that has employees grouped by `left_company` and `job_level`. For each group, we want the number of employees in that group and the percentage these employees represent of **all** employees in the data set.
+
+In the code below, I first calculate this the incorrect way. Notice that the `percent_total_employees` sums to 200. This is because the `mutate()` function was applied to the grouped data frame that `summarise()` produced. So we get the percentage for each group within "Yes" and "No".
+
+```{r}
+# Not what we wanted
+employee_data %>% group_by(left_company, job_level) %>% 
+                  summarise(employees = n()) %>% 
+                  mutate(percent_of_total_employees = 100*(employees/sum(employees)))
+
+```
+
+
+To avoid these type of surprises, I recommended dropping groups after summary statistics have been calculated. This is done with the `ungroup()` function.
+
+```{r}
+# This is correct
+employee_data %>% group_by(left_company, job_level) %>% 
+                  summarise(employees = n()) %>% 
+                  ungroup() %>% 
+                  mutate(percent_of_total_employees = 100*(employees/sum(employees)))
+
+```
+
+
+## Obtaining Distinct Values With `n_distinct()`
+
+The `n()` function counts the number of rows in an data frame while the `n_distinct()` function counts the number of unique values observed in a variable. This is useful in many situations.
+
+Like the `n()` function, `n_distinct()` is used within `summarise()` or `mutate()`.
+
+Let's say we wanted to know the number of distinct departments that are in the `employee_data` data frame. The code below will calculate this. We simply pass the `department` variable into `n_distinct()`
+
+
+```{r}
+employee_data %>% 
+  summarise(number_of_departments = n_distinct(department))
+
+```
+
+
+
+## Filtering data with `slice()` and `top_n()`
+
+The `top_n()` function can be used to subset a data frame based on the ranked values of a particular variable. This function takes three inputs:
+
+
+- a data frame
+- number of rows to return
+- variable used for ordering
+
+
+
+In the example below, I filter the `employee_data` dataset to include only the top 3 rows based on the `salary` values. By default, `top_n()` will return the rows with the 3 largest values of `salary`.
+
+```{r}
+employee_data %>% top_n(3, salary)
+
+```
+
+
+If there are any ties, the `top_n()` function will return all values. Notice that we get 4 rows in the output below. This is because the top 3 values of `yrs_at_company` are 40, 37, and 36 and there are two instances of 36 in the data.
+
+```{r}
+employee_data %>% top_n(3, yrs_at_company)
+```
+
+
+The `slice()` function is used to keep a certain number of rows in a results. If you want only the first 3 rows of a data frame, you could use *slice(1:3)*. Let's re-create the top 3 analysis we just performed, but this time we'll keep only the first three 3 rows.
+
+
+```{r}
+# Keep just the first 3 rows
+employee_data %>% slice(1:3)
+
+```
+
+
+```{r}
+# Keep rows 1, 200, 1002
+employee_data %>% slice(1, 200, 1002)
+
+```
+
+
+The `slice()` function can be used as an alternative to `top_n()` when paired with `arrange()`. This has the benefit of dropping tied values.
+
+The code below returns the top 3 values of `yrs_at_company` just as above, but only keeps the first 3 rows. This is acheived by first ordering the values of `yrs_at_company` in descending order.
+
+```{r}
+employee_data %>% arrange(desc(yrs_at_company)) %>% 
+                  slice(1:3)
+```
+
+
+The `slice()` and `top_n()` functions are also useful for creating subsets by groups in a data frame. Let's say that we wanted to filter the `employee_data` data frame to only include the top 2 employees with the largest values of `salary` for each department. The code below shows how we would accomplish this with `top_n()`.
+
+```{r}
+
+employee_data %>% group_by(department) %>% 
+                  top_n(2, salary)
+
+```
+
+
+To make things easier to interpret, we can arrange the results from above by `department` and `salary`
+
+```{r}
+employee_data %>% group_by(department) %>% 
+                  top_n(2, salary) %>% 
+                  arrange(department, desc(salary))
+
+```
+
+
+## Using Logical Subsetting Within `summarise`
+
+### Special Properties of Logical Vectors in `R`
+
+Imagine we have data from a survey we recently conducted where 7 people responded and provided their age. This data is stored in the age vector below.
+
+```{r}
+age <- c(23, 31, 27, 41, 54, 34, 25)
+
+age
+```
+
+What if we would like to know the number of people who are 30 or older and what percentage of the total respondents this group represents?
+
+We can answer this question by first using the  `>=` operator to find where values stored in the age vector are greater than or equal to the value 30. Anytime we use comparison operators (>, >=, <, <=, ==) on a vector, we will get a logical vector consisting of `TRUE/FALSE` values indicating where our condition was met.
+
+For example, running the code below produces a sequence of `TRUE/FALSE` values that test where our respondents are 30 or older in the age vector.
+
+```{r}
+age >= 30
+```
+
+### Two Important Operations on Logical Vectors in `R`
+To answer our question above, we can use the following properties of logical vectors in `R`:
+
+- the sum of a logical vector returns the number of TRUE values
+- the mean of a logical vector returns the proportion of TRUE values
+
+We see from the output below that 4 people in our survey were 30 years or older and that this represents 57% of the total respondents.
+
+```{r}
+sum(age >= 30)
+```
+
+```{r}
+mean(age >= 30)
+```
+
+
+
+### Logical Subsetting Within `summarise()`
+
+We can use these properties to extend our capabilities with `summarise()`. What if someone asked us how many employees there are by department and the count and proportion of those employees that make less than $60,0000?
+
+```{r}
+
+employee_data %>% group_by(department) %>% 
+                  summarise(employees = n(),
+                            employees_less_60 = sum(salary < 60000),
+                            employees_less_60_prop = mean(salary < 60000))
+
+```
+
+
+
+
+## Creating Variables with `case_when()`
+
+The `case_when()` function from the `dplyr` package is particularly useful when you need to create a new variable that relies on a complex combination of existing variables in a data frame. 
+
+The `case_when()` function takes a sequence of two-sided formulas. The left hand side determines which values match this case and the right hand side provides the replacement value. 
+
+The general syntax is `logical condition ~ replacement value`, where the logical condition can involve multiple variables from a data frame. The sequence ends with `TRUE ~ value for all other cases`.
+
+The sequence is evaluated in the order that it is put into `case_when()`. This syntax is best understood with an example.
+
+The code below creates a simple data frame with results from a survey.
+
+```{r}
+survey <- data.frame(age = c(24, 31, 28, 42, 18, 37, 51, 29),
+                     occupation = c("Biotech", "Statistics", "Data Science",
+                                    "Marketing","Biotech", "Data Science", 
+                                    "Statistics", "Boitech"),
+                     job_level = c("Entry", "Mid", "Mid", "Senior", "Entry", 
+                                   "Mid", "Senior", "Mid"))
+
+survey
+```
+
+
+
+Next we use `case_when()` to create a new character vector within the `survey` data that labels people in statistics and 30 years or older as "Statistics, 30+", people in Data Science that are 30 years or older as "Data Science, 30+", and "Other" for all other combinations.
+
+```{r}
+survey_updated <- survey %>% 
+                  mutate(stat_ds_30 = case_when(age >= 30 & occupation == 'Statistics' ~ 'Statistics, 30+',
+                                                age >= 30 & occupation == "Data Science" ~ "Data Science, 30+",
+                                                TRUE ~ 'Other'))
+
+survey_updated
+                        
+```
+
+
+
+## Binning Numeric Variables with `cut_*()`
+
+There are three very useful functions within the `tidyverse` package that perform automating binning of numeric data for quick exploratory analysis. These functions take a numeric vector as input and return a factor with labeled levels.
+
+
+- `cut_interval()` makes n groups with `equal range`
+- `cut_number()` makes n groups with (approximately) `equal numbers of observations`
+- `cut_width()` makes groups of a `given width` 
+
+
+
+### `cut_interval()`
+
+```{r}
+# Original variable
+survey$age
+
+```
+
+
+```{r}
+# cut_interval
+age_interval <- cut_interval(survey$age, n = 3)
+
+# View results
+age_interval
+
+```
+
+
+```{r}
+# Obtain factor level counts
+summary(age_interval)
+```
+
+
+
+### `cut_number()`
+
+```{r}
+# cut_number
+age_number <- cut_number(survey$age, n = 3)
+
+# View results
+age_number
+```
+
+
+```{r}
+# View factor level counts
+summary(age_number)
+
+```
+
+
+
+### `cut_width()`
+
+The `cut_interval()` takes a `width` argument which specifies the width of each interval and a `boundary` argument for centering intervals. By default boundary is equal to 0.5 which may led to intervals have non-integer end points. I usually set boundary to 0 so that the intervals always fall between integer values.
+
+```{r}
+# Original variable
+survey$age
+
+```
+
+
+```{r}
+# cut_width
+age_width <- cut_width(survey$age, width = 10, boundary = 0)
+
+```
+
+
+```{r}
+# View result
+age_width
+
+```
+
+
+```{r}
+# View counts
+summary(age_width)
+
+```
+
+
+
+### Example with `employee_data`
+Let's use the `cut_width()` function to accomplish the following data analysis workflow with `dplyr`
+
+
+
+- Start with `employee_data`
+- Create a `miles_category` variable that bins `miles_from_home` values in 5 mile increments
+- Form groups by `left_company` and `miles_category`
+- Count the number of employees that fall into each combination
+
+
+
+```{r}
+employee_data %>% 
+  mutate(miles_category = cut_width(miles_from_home, width = 5, boundary = 0)) %>% 
+  group_by(left_company, miles_category) %>% 
+  summarise(employees = n())
+           
+```
+

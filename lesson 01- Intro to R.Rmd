@@ -1,0 +1,1010 @@
+---
+title: "Introduction to R"
+author: "David Svancer"
+---
+
+In this tutorial, we will learn about data types and common data structures used in `R`.
+
+**Data types** represent different types of information that can be stored in `R`. The most common `R` data types are:
+
+- numeric
+- integer
+- logical
+- character
+
+**Data structures** provide a way to organize and work with different types of data. The data structures we will learn about include:
+
+- vectors
+- matrices
+- lists
+- data frames
+
+# Data Types
+
+The most common `R` data types include numeric, integer, logical, and character. The table below provides examples of how each data type is represented in `R`.
+
+
+| **Data Type**    | **Example Values**                        |
+|------------------|-------------------------------------------|
+| Numeric (Double) | 8.123,  10,  2.71812                      |
+| Integer          | 1L,  19L,  2000L                          |
+| Logical          | TRUE,  FALSE,  T,  F                      |
+| Character        | "A character string of text", "d", "8.23" |
+
+
+**Numeric** data types represent real numbers, such as 2.345, $\pi$, and 4.001. 
+
+**Integer** data types represent whole counting numbers and are entered into `R` by adding an "L" after the number. 
+
+**Logical** data types represent the logical conditions TRUE and FALSE. They can be entered as the unquoted text, TRUE, or just T, for example. 
+
+**Character** data types represent text data and must be entered enclosed between quotes, either single ' or double ".
+
+
+
+# Data Structures
+
+## Summary of R Data Structures
+
+The most common data structures in `R`, can be categorized by their dimension (one or two) and restrictions on their contents in terms of data types. 
+
+They can be **homogeneous**, where all elements are of the same data type or **heterogeneous**, where contents may have multiple data types. 
+
+In this course, we will be using vectors, matrices, data frames, and lists. The key features of these data structures are summarized in the table below. 
+
+| Data Structure | Data Type Restriction | Dimension |
+|----------------|-----------------------|-----------|
+| Vector         | Homogeneous           | 1         |
+| List           | Heterogeneous         | 1         |
+| Matrix         | Homogeneous           | 2         |
+| Data frame     | Heterogeneous         | 2         |
+
+
+
+## Vectors
+
+### Creating Vectors
+
+A vector is a one-dimensional sequence of data elements of the **same type**.
+
+Vectors are constructed with the `c()` function. To assign a vector to a variable, use the `<-` operator (a keyboard shortcut of this symbol is "Alt" + "-").
+
+
+The code below will create a numeric vector with 4 elements and print the result to the `R` console.
+
+```{r}
+# A numeric vector
+c(4, 23, 4.1, 3.5)
+
+```
+
+
+To assign the results to a variable in our `R` environment, we use the "<-" operator.
+
+```{r}
+# Assign results to numeric_vec
+numeric_vec <- c(4, 23, 4.1, 3.5)
+
+```
+
+
+When working with any data structure in `R`, it is important to be able to explore its contents and obtain information about the type of data stored in the structure. 
+
+To get information about any data structure, we can use the `str()` function. This will display the data type of a vector and print it contents. 
+
+```{r}
+# Check the type and contents of numeric_vec
+# We see that it is numeric (num)
+str(numeric_vec)
+```
+
+
+Another important attribute of vectors is how many data elements it contains. This is provided by passing a vector into the `length()` function.
+
+```{r}
+length(numeric_vec)
+```
+
+
+The `c()` function can be used to create vectors using single input data elements separated by commas, pre-defined vectors, vectors created with the `c()` function, or a mixture of all formats. In the examples below, various ways of creating new vectors is demonstrated. 
+
+```{r}
+# Combine a pre-defined vector with additional data
+numeric_vec_2 <- c(numeric_vec, 4.7, 5.1)
+
+# View result
+numeric_vec_2
+
+```
+
+
+```{r}
+# Adding another c() function within an outer c() function
+numeric_vec_3 <- c(1.2, 
+                   numeric_vec, 
+                   c(1.1, 2.4, 4.1))
+
+numeric_vec_3
+```
+
+
+### Special Functions for Creating Numeric Vectors
+
+There are two useful functions, `seq()` and `:`, for creating numeric or integer vectors.
+
+The `seq()` function has three important *arguments*:
+
+- The first is **from** (where should the values begin)
+- The second is **to** (where should the values end)
+- The third is **by** (by how much should the values increment)
+
+These arguments can be provided by *name*, as shown below
+
+```{r}
+seq_vec <- seq(from = 1, to = 6, by = 1)
+
+str(seq_vec)
+
+```
+
+
+
+Or by *position*
+
+```{r}
+seq(1, 6, 1)
+```
+
+
+
+The `seq()` function will create *integer* vectors if we pass numbers followed by "L" into the function.
+
+```{r}
+seq_int_vec <- seq(1L, 10L, 2L)
+
+str(seq_int_vec)
+```
+
+
+The `:` function can be used to quickly generate a numeric/integer vector that increments by one. The vector is created using the following rule: `start value:end value`
+
+```{r}
+# Numeric vector
+1:5
+
+# Integer vector
+1L:10L
+
+# Also works in reverse
+5:1
+```
+
+
+To learn more about the `:` or any other function in `R`, just execute `?:` in the console and the help page will pop up in the lower right portion of RStudio.
+
+
+
+
+### Coercion Rules in `R`
+
+All elements of a vector must be of the same type. When combining different data types into a single vector, it will be **coerced** in the following precedence order:
+
+1. character
+2. numeric
+3. integer
+4. logical
+
+This means that if you mix character elements with numeric and integer element, then all elements get converted to character (since it has higher precedence).
+
+These rules are important to understand, since many errors that show up in your code will be due to a mismatch of data types.
+
+The vector below will get converted to a character vector.
+
+```{r}
+vector_1 <- c(2.45, 5.1, 1L, 'character')
+
+str(vector_1)
+```
+
+
+The vector below will get converted to a numeric vector. Notice that `R` converts logical values in the following way: TRUE becomes 1 and FALSE becomes 0. 
+
+```{r}
+vector_2 <- c(4.234, 10L, TRUE, T, FALSE)
+
+str(vector_2)
+```
+
+
+This vector will be converted to an integer vector.
+
+```{r}
+vector_3 <- c(10L, 5L, TRUE, FALSE)
+
+str(vector_3)
+
+```
+
+## Factors
+
+Factors are a special data structure for working with *categorical* data. Categorical data represents data that only differs by label (such 'yes'/'no') or ranks (such as '1st', '2nd', etc.).
+
+In `R`, factors are a special type of **labeled integer vector**. Factors are created with the `factor()` function. This function takes as arguments, a vector, the levels of the factor, and the labels of the factor. 
+
+Think of factors as a way to label your data. Factors should only be used when you have a pre-determined number of categories.
+
+```{r}
+# Creating a factor vector
+weekday_factor <- factor(c('M', 'T', 'W', 'Th', 'F', 'M', 'W'),
+                        levels = c('M', 'T', 'W', 'Th', 'F'), 
+                        labels =  c('Monday', 'Tuesday', 'Wednesday',
+                                    'Thursday', 'Friday'))
+```
+
+
+```{r}
+# View results 
+weekday_factor
+```
+
+
+The `str()` function will tell us that the vector is factor, display some of the levels, and show the underlying mapping of levels to integer values that happened behind the scenes. 
+
+The levels of a factor are always mapped to a sequence of numbers starting at 1 and increasing by 1 for every level. This mapping is based on the order in which the levels are entered in `factor()`
+
+```{r}
+str(weekday_factor)
+
+```
+
+
+The `summary()` function will automatically count the occurrence of factor labels.
+
+```{r}
+summary(weekday_factor)
+
+```
+
+
+Factors can also be created with numeric vectors as input. Let's say that we have a vector of 1s and 0s where 1 represents the occurrence of an event and 0 otherwise. The code below shows how to create a labeled factor from the data.
+
+```{r}
+event_indicator <- c(1, 0, 0, 1, 0, 0)
+
+event_fct <- factor(event_indicator,
+                    levels = c(0, 1),
+                    labels = c('No', 'Yes'))
+
+summary(event_fct)
+```
+
+
+Note that the order in which the levels are entered effects how they are stored in the factor.
+
+```{r}
+event_fct_2 <- factor(event_indicator,
+                    levels = c(1, 0),
+                    labels = c('Yes', 'No'))
+
+summary(event_fct_2)
+```
+
+
+To access the levels of any factor and see their order, use the `levels()` function.
+
+```{r}
+levels(event_fct)
+
+levels(event_fct_2)
+```
+
+
+By default, if we do not provide input to the levels and labels arguments in `factor()`, levels are automatically assigned in alphabetic order (for character vectors) or numeric order. The labels are then set to the levels values.
+
+```{r}
+fct_from_chr <- factor(c('Yes', 'No', 'No', 'Yes'))
+
+str(fct_from_chr)
+
+```
+
+
+```{r}
+fct_from_num <- factor(c(1, 1, 1, 4, 5),
+                       levels = c(1, 2, 3, 4, 5))
+
+str(fct_from_num)
+
+```
+
+## Matrices
+
+A matrix is an `R` data structure that stores a collection of data arranged in a 2 dimensional table with rows and columns. Like vectors, all data elements of a matrix must be of the same type. 
+
+If you build a matrix with vectors of different data types, the matrix will be coerced with the same precedence rules as above. A matrix can't store a numeric column as well as a character column, this would get coerced into a character matrix.
+
+You can create matrices with the `matrix()` function. Vectors are created with the `c()` function. This generalizes to `cbind()` or `rbind()` for matrices. The code below demonstrates these functions. 
+
+Matrices also have the ability to capture row and column names. To check these, we can use the `rownames()` and `colnames()`
+
+
+To create a matrix, use the `matrix()` function.
+
+```{r}
+# Build a numeric 2 X 2 matrix
+A <- matrix(data = c(1, 2, 3, 4), # data is entered as a vector
+                  nrow = 2, # number of rows
+                  ncol = 2, # number of columns
+                  byrow = TRUE) # read data in by row (default is FALSE)
+```
+
+
+The `str()` function will lets us know that we have a numeric matrix with 2 rows and 2 columns.
+
+```{r}
+# View properties with str()
+str(A)
+```
+
+
+We can check the dimensions of a matrix using the `dim()` function.
+
+```{r}
+# Check the dimensions of A (rows,columns)
+dim(A)
+
+```
+
+
+```{r}
+# View A
+A
+
+```
+
+
+Matrices can also be created with pre-defined vectors.
+
+```{r}
+# We can build a matrix with a predefined vector
+vector_1 <- c(1, 2, 3, 4)
+ 
+B <- matrix(vector_1, 
+            nrow = 2, 
+            ncol = 2, 
+            byrow = FALSE)
+```
+
+
+```{r}
+B
+
+```
+
+
+
+We can combine multiple vectors to create matrices using the `cbind()` and `rbind()` functions. 
+
+`cbind()` will stack vectors horizontally (by column) and `rbind()` will stack vectors vertically (by row).
+```{r}
+vector_2 <- c(5, 6, 7, 8)
+
+C <- cbind(vector_1, vector_2)
+
+C
+```
+
+
+Since we created our matrix using named vectors, our matrix C has column names. To view the column names of any matrix, use the `colnames()` function.
+```{r}
+# Obtain column names
+colnames(C)
+
+```
+
+
+`rbind()` creates matrices by row.
+```{r}
+D <- rbind(vector_1, vector_2)
+
+D
+```
+
+
+We can access the row names by using the `rownames()` function on our matrix D.
+```{r}
+rownames(D)
+
+```
+
+
+We can also create or overwrite row/columns names for any matrix. In the code below, we assign column names to our matrix D and overwrite the original row names.
+
+```{r}
+colnames(D) <- c('column_1', 'column_2', 'column_3', 'column_4')
+rownames(D) <- c('row_1', 'row_2')
+
+D
+```
+
+
+## Lists
+
+Like matrices, lists are `R` objects that can hold multiple vectors. But unlike matrices, they are one dimensional and can store mixed data types. 
+
+The advantage of lists is that they can hold varying data types with different lengths and dimensions. Think of lists as special vectors that can store different data structures in each position. Lists can be recursive, meaning that a list can contain list. 
+
+Lists are **very** important as most output from statistical models in `R`, such as linear regression or clustering, are returned as lists. 
+
+Lists are created with the `list()` function. To obtain the named contents of a list, if any exist, use the `names()` function.
+
+We will discuss how to obtain the various objects within a list in the subsetting section of this tutorial.
+
+```{r}
+
+my_list <- list(char_vector = c('A', 'B'),
+                numeric_vector = c(1.2, 3.4, 5, 12.01),
+                a_matrix = cbind(c(1, 2), c(3, 4)),
+                a_list = list(c(1L, 4L), c('A', 'D', 'E')))
+```
+
+
+```{r}
+# View contents
+my_list
+
+```
+
+
+We can use the `names()` function to see whether a list has named elements. Remember that a list is one-dimensional. We can see from the output below that `my_list` contains 4 elements, where the vector named `char_vector` is in the first position of the list.
+```{r}
+# View the names (if they exist) of my_list
+names(my_list)
+
+```
+
+
+##  Data Frames
+
+The most common `R` data structure is the data frame. A data frame is a specialized 2-dimensional list that must contain equal-length vectors, possibly of varying type. Data frames are created with the `data.frame()` function.
+
+A good comparison for a data frame would be a SQL table.
+
+Data frames are rectangular tables of data, where columns represent variables and rows represent observations on these variables. Unlike general one-dimensional lists, data frames must have vectors of the same length. However, vectors may have different types, such as numeric, character, or factor. 
+
+To obtain the names of the variables in a data frame, use `names()` or `colnames()`. To get the number of rows in a data frame, use `nrow()` or `dim()`. 
+
+```{r}
+# Let's create a simple data frame with the data.frame function
+my_data <- data.frame(student_id = c(100234, 132454, 453123),
+                      test_1_grade = c(82, 93, 87),
+                      hw_1_grade = c(92, 89, 98),
+                      session = c("7 AM", "7 PM", "7 AM"))
+```
+
+
+```{r}
+# View the data
+my_data
+
+```
+
+
+We can obtain the column names of our data frame by either using `names()` or `colnames()`.
+```{r}
+# Get the variable names
+names(my_data)
+
+colnames(my_data)
+```
+
+
+To get the number of rows or columns in a data frame, we can use `nrow()`, `ncol()`, or `dim()`.
+```{r}
+ncol(my_data)
+
+nrow(my_data)
+
+```
+
+
+```{r}
+# Number of rows and columns
+dim(my_data)
+
+```
+
+
+# Operators in R
+In this section we will cover the most common operators in `R` that are used to manipulate data structures.
+
+##  Assignment Operators
+
+The `<-` operator is used to create variables in `R`. This operator will assign what is to the right of it to the variable name on the left side. We've been using this throughout the tutorial.
+
+A keyboard shortcut for `<-` is 'Alt' + '-' in Windows.
+
+```{r}
+
+my_vector <-  c(10, 20)
+
+```
+
+
+```{r}
+
+my_vector
+
+```
+
+
+## Arithmetic Operators
+
+Standard mathematical operations, such as addition and multiplication, are available in `R`. In the examples below, these operations are demonstrated with the appropriate operators. 
+
+`R` computes operations in a **vectorized** manner, meaning that if you add two vectors, for example, the addition is performed element-wise within the corresponding vectors. 
+
+If you multiple a vector by a single number, **all** elements of the vector are multiplied by that number. This is commonly referred to as **broadcasting**.
+
+```{r}
+# + operator adds two vectors, element-wise
+v_1 <- c(2, 4, 7)
+v_2 <- c(2, 5, 8)
+
+```
+
+
+```{r}
+
+v_1 + v_2
+
+```
+
+
+```{r}
+# - operator subtracts two vectors
+v_1 - v_2
+
+```
+
+
+```{r}
+# * operator multiples two vectors
+v_1 * v_2
+
+```
+
+
+```{r}
+# Multiplication by a constant
+5*v_1
+
+```
+
+
+```{r}
+# Exponentiation
+v_1 ^ 2
+
+```
+
+
+```{r}
+# / operator divides two vectors
+v_1/v_2
+
+```
+
+
+## Relational Operators
+
+Relational operators, such as `<=` or `>`, are used to compare data values to each other. The results from using relational operators will always return a logical vector.
+
+
+```{r}
+# Check where elements of v_1 are greater than v_2
+# Produces a logical vector
+v_1 > v_2
+
+```
+
+
+```{r}
+# >= greater than or equal to
+v_1 >= v_2
+
+```
+
+
+```{r}
+# <
+v_1 < v_2
+
+```
+
+
+```{r}
+# <=
+v_1 <= v_2
+
+```
+
+
+```{r}
+# == operator checks for equality
+v_1 == v_2
+
+```
+
+
+```{r}
+# != operator finds where the two vectors are not equal
+v_1 != v_2
+
+```
+
+
+```{r}
+# Check where v_1 is greater than 2
+v_1 > 2
+
+```
+
+
+## Logical Operators
+
+Logical operators, such as AND (`&`), OR (`|`), and NOT (`!`), are used to perform calculations with logical data types in `R`. These are important for filtering rows of data frames where variables meet certain conditions.
+
+```{r}
+a <- 5
+b <- 10
+
+```
+
+
+
+The `&` operator represents the logical AND operation. It will return TRUE if both conditions on the left and right of it are TRUE.
+```{r}
+a == 5 & b == 10
+
+```
+
+
+For vectors, all pairwise elements are compared.
+```{r}
+v_1 >= 3 & v_2 >= 2
+
+```
+
+
+The `|` operator represents the logical OR operation. It will return TRUE if either one of the conditions on the left and right of it are TRUE.
+```{r}
+a > 6 | b > 7
+
+```
+
+For vectors, all pairwise elements are compared.
+```{r}
+v_1 > 5 | v_2 > 5
+
+```
+
+
+Finally, `!` is used for negation. This means it will convert all TRUE values to FALSE and FALSE values to TRUE.
+```{r}
+L1 <- c(TRUE, FALSE, TRUE)
+
+```
+
+
+```{r}
+L1
+
+```
+
+
+```{r}
+# Give L1 opposite logical values
+!L1
+
+```
+
+
+Be careful when using the `!` operator. It is always best to enclose any logical test within parentheses to make sure you are getting the negation. 
+
+Without parentheses in the code below, `!v_1 >= v_2` would be carried out as 'negate v_1 and test whether it is greater than v_2'. This is different from 'test where v_1 is greater than v_2 and negate the result' that is executed by the code below.
+
+```{r}
+# Find where v_1 is not greater than or equal to v_2
+!(v_1 >= v_2)
+
+```
+
+
+# Subsetting Data Structures
+
+When you want to extract elements of a vector that meet a logical condition, or vectors stored in lists or data frames, you will have to subset the `R` objects with the `[ ]`, `[[ ]]` or `$` functions. This is best demonstrated with some examples.
+
+## Subsetting Vectors
+
+### Logical Subsetting
+
+It's possible to subset vectors in `R` by using logical or numeric vectors. I will demonstrate both methods below. 
+
+```{r}
+number_vector <- c(1, 3, 6, 10)
+
+```
+
+
+The code below produces a logical vector that indicates where `number_vector` is greater than 5
+```{r}
+number_vector > 5
+
+```
+
+
+We can use the logical vector result from above to get only the elements from `number_vector` that are greater that 5. We just place the logical condition within the `[ ]` function to the right of the original vector.
+```{r}
+number_vector[number_vector > 5]
+
+```
+
+
+We can also use relational or logical operators.
+```{r}
+number_vector > 3 | number_vector <= 10
+
+```
+
+
+```{r}
+
+number_vector[number_vector > 3 | number_vector <= 10]
+
+```
+
+
+### Numeric Subsetting
+We can also subset vectors with a numeric indexing vector. The code below returns the 2nd and 4th elements from `number_vector`.
+```{r}
+number_vector[c(2, 4)]
+
+```
+
+Unlike many other programming languages, elements within `R` data structures start at 1, not 0.
+```{r}
+number_vector[1]
+```
+
+
+## Subsetting Lists
+
+Remember that lists are collections of various data structures. To access the data structures stored within lists, we can use the `[ ]`, `[[ ]]` or `$` functions. 
+
+If you have a list, call it `my_list`, then `my_list[1]` returns a list with the first element of `my_list`. This is different from `my_list[[1]]`, which returns the contents of the first element of `my_list`. 
+
+If you imagine that `my_list` is a large box that contains 10 small boxes, then `my_list[1]` returns the first box (which is still a box), while `my_list[[1]]` returns the contents of the first box (which may no longer be a box).
+
+
+```{r}
+
+student_list <- list(student_id = c(12, 15),
+                     section = c('001', '003'),
+                     age = c(26, 20))
+```
+
+
+The code below will return a list that contains the first element of `student_list`.
+```{r}
+student_list[1]
+
+# Check properties with str()
+str(student_list[1])
+
+```
+
+
+If we want to extract the first element from the list, we need to use `[[ ]]`. Notice that `str()` now tells use that we got a numeric vector.
+```{r}
+student_list[[1]]
+
+# Check properties with str()
+str(student_list[[1]])
+
+```
+
+
+You can subset lists with the names of the elements stored in it. The code below is eqivalent to the code from above.
+```{r}
+student_list[["student_id"]]
+
+```
+
+
+What if we want to extract the first number from the `student_id` vector that is in the first position of `student_list`? We will have to use `[[ ]]` followed by `[ ]`
+```{r}
+student_list[["student_id"]][1]
+
+```
+
+
+The `$` operator is a shortcut for extracting elements from a list and works like `[[ ]]`
+```{r}
+# This will extract the student_id vector
+student_list$student_id
+
+```
+
+
+This is an alternate way to get the first element of the `student_id` vector within `student_list`.
+```{r}
+student_list$student_id[1]
+```
+
+
+## Subsetting Data Frames
+
+To subset rows and columns of a data frame we can use the following syntax:
+
+`my_data_frame[row condition, column condition]`
+
+The row/column conditions may be either numeric indexes, logical expressions, or vectors of column names (for column selection)
+
+```{r}
+
+my_data_frame <- data.frame(make = c("Toyota","Honda","Ford", "Toyota", 
+                                     "Ford", "Honda"),
+                            mpg = c(34, 33, 22, 32, 29, 27),
+                            cylinders = c(4, 4, 8, 6, 6, 8))
+```
+
+
+```{r}
+# View data
+my_data_frame
+```
+
+
+### Numeric Indexing
+
+In the example below, we select rows 1 - 3 and columns 1 - 2. Remember that the `:` functions creates a sequence of number values. `1:3` will create the following vector [1, 2, 3].
+
+```{r}
+# First three rows, first two columns
+my_data_frame[1:3, 1:2]
+
+```
+
+
+```{r}
+my_data_frame[c(1, 2, 3), c(1, 2)]
+
+```
+
+```{r}
+# row 2, columns 1 and 3
+my_data_frame[2, c(1, 3)]
+```
+
+
+Leaving a row or column condition blank will return all values along that axis.
+```{r}
+# Rows 1 and 2, all columns
+my_data_frame[1:2, ]
+```
+
+
+### Logical Indexing
+
+We can also pass logical vectors into the row condition to obtain a subset of our data. Let's demonstrate this by selecting rows that have `mpg` values greater than or equal to 30.
+
+```{r}
+# Create logical vector
+logical_condition <- my_data_frame$mpg >= 30
+
+```
+
+
+```{r}
+# View results
+logical_condition
+
+```
+
+
+Now we pass this logical vector into the row condition.
+```{r}
+# Use to subset data
+my_data_frame[logical_condition, ]
+
+```
+
+
+In practice, you would write this in one step.
+```{r}
+my_data_frame[my_data_frame$mpg >= 30, ]
+
+```
+
+
+### Numeric and Logical Subsetting
+
+Both methods of indexing can be combined in a single expression. Below are some examples.
+
+```{r}
+# All rows with at least 32 mpg, columns 2 and 3
+my_data_frame[my_data_frame$mpg >= 32, c(2, 3)]
+
+```
+
+
+```{r}
+# The same conditions, but using column names
+my_data_frame[my_data_frame$mpg >= 32, c("mpg", "cylinders")]
+
+```
+
+
+### Extracting Columns
+
+Just like with lists, a single [] will return a data frame and a double [[ ]] will extract a column vector from a data frame. 
+
+```{r}
+# This returns a data frame
+my_data_frame[1]
+
+str(my_data_frame[1])
+
+```
+
+
+```{r}
+# This extracts the first column
+my_data_frame[[1]]
+
+str(my_data_frame[[1]])
+
+```
+
+
+The above can also be accomplished by using the name of the first column.
+```{r}
+my_data_frame[['make']]
+```
+
+
+Just like with lists, we can use `$` instead of `[[ ]]`. In this case, you must use the name of the column.
+
+```{r}
+my_data_frame$make
+```
+
+
+# Exercises
+
+## Exercise 1
+
+In this exercise, we will be working with the following list
+
+```{r}
+
+my_list <- list(classes_offered = c("MIS 431", "MIS 310", "MIS 410", "MIS 412"),
+                student_data = data.frame(student_id = c(54, 100, 32, 423, 
+                                                         2, 19, 39),
+                                          age = c(18, 22, 27, 18, 29, 
+                                                  22, 20),
+                                          gpa = c(3.1, 2.8, 3.7, 3.4, 3.2, 
+                                                  3.4, 3.2),
+                                          stringsAsFactors = FALSE))
+```
+
+Write the `R` code that calculates the median value (use the `median()` function) of the `gpa` variable in `student_data`. All you need to do is pass the `student_id` vector into the `median()` function. 
+
+To read about the `median()` function, just execute the following in your `R` session: `?median`
+
+
+## Exercise 2
+
+Subset `my_data_frame` to only include rows that have a `cylinders` value of 4.
+

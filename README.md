@@ -1,7 +1,7 @@
 # Data Mining at George Mason University
 R code for all course tutorials
 
-<a href = "https://gmudatamining.com" 
+<a href = "https://gmubusinessanalytics.netlify.app.com" 
    target = "_blank"> 
  https://gmubusinessanalytics.netlify.app.com
 </a>

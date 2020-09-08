@@ -3,15 +3,6 @@ title: "Data Analysis with the Tidyverse"
 author: "David Svancer"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      message = FALSE, 
-                      warning = FALSE,
-                      comment = "")
-```
-
-
-
 In this tutorial, we will learn about `R` functions and data analysis with the `tidyverse` package.
 
 

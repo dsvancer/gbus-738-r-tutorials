@@ -4,16 +4,6 @@ author: "David Svancer"
 
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      message = FALSE, 
-                      warning = FALSE,
-                      comment = "",
-                      fig.width = 7.5,
-                      fig.height = 5)
-```
-
-
 In this tutorial, we will learn about joining data with `dplyr`, pivoting data frame with `tidyr`, and data visualization with `ggplot2`. These three packages are the most widely used packages within the `tidyverse` for data analysis.
 
 

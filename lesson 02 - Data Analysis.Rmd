@@ -781,7 +781,7 @@ employee_data %>% slice(1, 200, 1002)
 
 The `slice()` function can be used as an alternative to `top_n()` when paired with `arrange()`. This has the benefit of dropping tied values.
 
-The code below returns the top 3 values of `yrs_at_company` just as above, but only keeps the first 3 rows. This is acheived by first ordering the values of `yrs_at_company` in descending order.
+The code below returns the top 3 values of `yrs_at_company` just as above, but only keeps the first 3 rows. This is achieved by first ordering the values of `yrs_at_company` in descending order.
 
 ```{r}
 employee_data %>% arrange(desc(yrs_at_company)) %>% 
@@ -881,7 +881,7 @@ The code below creates a simple data frame with results from a survey.
 survey <- data.frame(age = c(24, 31, 28, 42, 18, 37, 51, 29),
                      occupation = c("Biotech", "Statistics", "Data Science",
                                     "Marketing","Biotech", "Data Science", 
-                                    "Statistics", "Boitech"),
+                                    "Statistics", "Biotech"),
                      job_level = c("Entry", "Mid", "Mid", "Senior", "Entry", 
                                    "Mid", "Senior", "Mid"))
 

@@ -14,14 +14,14 @@ Then we will focus on building our first machine learning pipeline, with data re
 The `R` code below will load the data and packages we will be working with throughout this tutorial. The `vip` package is used for exploring predictor variable importance. We will use this package for visualizing which predictors have the most predictive power in our linear regression models.
 
 
-
-
 ```{r}
 # Load libraries
 library(tidyverse)
 library(tidymodels)
 library(vip) # for variable importance
+```
 
+```{r}
 # Load data sets
 advertising <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/advertising.rds'))
 

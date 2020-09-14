@@ -604,3 +604,40 @@ ggplot(data = homes_results,
        y = 'Actual Selling Price')
 ```
 
+
+### Variable Importance 
+
+Creating a workflow and using the `last_fit()` function is a great option of **automating** a machine learning pipeline. However, we are not able to explore variable importance on the training data when we fit our model with `last_fit()`.
+
+To obtain a variable importance plot with `vip()`, we must use the methods introduced at the beginning of the tutorial. This involves fitting the model with the `fit()` function on the training data.
+
+To do this, we will train our `homes_recipe` and transform our training data. Then we use the `fit()` function to train our linear regression object, `lm_model`, on our processed data.
+
+Then we can use the `vip()` function to see which predictors were most important.
+
+
+```{r}
+homes_training_baked <- homes_recipe %>% 
+                        prep() %>% 
+                        bake(new_data = homes_training)
+
+# View results
+homes_training_baked
+```
+
+
+Now we fit our linear regression model to the baked training data.
+
+
+```{r}
+homes_lm_fit <- lm_model %>% 
+                fit(selling_price ~ ., data = homes_training_baked)
+```
+
+
+Finally, we use `vip()` on our trained linear regression model. It appears that square footage and location are the most importance predictor variables.
+
+
+```{r}
+vip(homes_lm_fit)
+```

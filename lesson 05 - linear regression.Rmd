@@ -8,28 +8,6 @@ In this tutorial, we will learn about linear regression with `tidymodels`. We wi
 
 Then we will focus on building our first machine learning pipeline, with data resampling, featuring engineering, modeling fitting, and model accuracy assessment using the `workflows`, `rsample`, `recipes`, `parsnip`, and `tune` packages from `tidymodels`.
 
-Please click the button below to open an interactive version of all course `R` tutorials through RStudio Cloud. 
-
-**Note**: you will need to register for an account before opening the project. Please remember to use your GMU e-mail address.
-
-
-
-<a href="https://rstudio.cloud/project/1528737" target="_blank">
-  <button class="rstudio-cloud-btn">
-    <i class="fa fa-cloud"> &#160; &#160; </i>
-      Open in RStudio Cloud
-  </button>
-</a>
-
-
-
-Click the button below to launch an interactive RStudio environment using `Binder.org`. This will launch a pre-configured RStudio environment within your browser. Unlike RStudio cloud, this service has no monthly usage limits, but it may take up to 10 minutes to launch and you will not be able to save your work.
-
-
-<center>[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dsvancer/gbus-738-r-tutorials/master?urlpath=rstudio){target="_blank"}</center>
-
-
-
 
 # Introduction to Linear Regression
 

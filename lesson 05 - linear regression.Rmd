@@ -613,7 +613,7 @@ homes_results
 
 Finally, lets use the `homes_results` data frame to make an R2 plot to visualize our model performance on the test data set.
 
-It looks like our linear regression model does really well for home selling prices between \$200,000 and \$1,000,000. Outside of this range, our model has rather large errors. In fact, for some homes with selling prices of less than \$40,000, our model predicts a negative selling price! 
+It looks like our linear regression model does really well for homes with actual selling prices between \$250,000 and \$1,000,000. Outside of this range, our model has rather large errors. In fact, for some homes with selling prices of less than \$220,000, our model predicts a negative selling price! 
 
 This is why it's important to always make an R2 plot and analyze your model's errors. 
 

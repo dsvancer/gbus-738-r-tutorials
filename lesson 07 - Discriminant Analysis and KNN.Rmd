@@ -26,10 +26,15 @@ When installing `discrim`, you will also need to install the `klaR` package.
 library(tidyverse)
 library(tidymodels)
 library(discrim) # for discriminant analysis
+```
 
+```{r}
 # Telecommunications customer churn data
 churn_df <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/churn_data.rds'))
+```
 
+
+```{r}
 
 # Seattle home sales
 home_sales <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/home_sales.rds')) %>% 

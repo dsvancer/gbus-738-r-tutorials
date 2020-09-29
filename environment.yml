@@ -8,7 +8,6 @@ dependencies:
   - r-vip
   - r-lubridate
   - r-nycflights13
-  - r-discrim
   - r-klaR
   - r-kknn
   

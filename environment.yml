@@ -10,4 +10,7 @@ dependencies:
   - r-nycflights13
   - r-klaR
   - r-kknn
+  - r-rpart
+  - r-rpart.plot
+  - r-ranger
   

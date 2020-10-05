@@ -280,7 +280,7 @@ vip(tree_fit)
 
 We can visualize the trained decision tree by using the rpart.plot() function from the rpart.plot package. We must pass the `fit` object stored within `tree_fit` into the `rpart.plot()` function to make a decision tree plot.
 
-When we add the argument extra = 103, each node in the tree contains the predicted response value, the fraction of misclassified observations if we were to stop at that split, and the percentage of observations in that node from the training data. I have also changed the tweak argument to 1.0 so that the text doesn't crowd the image. When passing a `tidymodels` object into this function we also need to pass the addition parameter, `roundint = FALSE`.
+When passing a `tidymodels` object into this function we also need to pass the addition parameter, `roundint = FALSE`.
 
 This visualization is a tool to communicate the prediction rules of the trained decision tree (the splits in the predictor space).
 

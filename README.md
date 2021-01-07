@@ -8,4 +8,4 @@ R code for all course tutorials
 
 Click the button below to launch an interactive RStudio environment within your browser. 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dsvancer/gbus-738-r-tutorials/master?urlpath=rstudio){target="_blank"}
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dsvancer/gbus-738-r-tutorials/master?urlpath=rstudio)

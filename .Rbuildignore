@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^gbus738tutorials\.Rcheck$
+^gbus738tutorials.*\.tar\.gz$
+^gbus738tutorials.*\.tgz$

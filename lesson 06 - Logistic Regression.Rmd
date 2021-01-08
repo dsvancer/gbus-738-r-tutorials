@@ -22,15 +22,21 @@ The code will load the required packages and data sets for this tutorial.
 library(tidyverse)
 library(tidymodels)
 library(vip)
+```
 
+```{r}
 # Load employee attrition data
 employee_data <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/employee_data.rds'))
+```
 
+```{r}
 
 # Heart disease data
 heart_df <- read_rds(url('https://gmubusinessanalytics.netlify.app/data/heart_disease.rds')) %>% 
             select(heart_disease, age, chest_pain, max_heart_rate, resting_blood_pressure)
+```
 
+```{r}
 # View heart disease data
 heart_df
 ```
